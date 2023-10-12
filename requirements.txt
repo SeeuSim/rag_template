@@ -1,1 +1,8 @@
+beautifulsoup4
+pdfplumber
+
+langchain[llms]
+numpy
 ray[data,train,tune,serve]
+sentence-transformers
+tqdm
