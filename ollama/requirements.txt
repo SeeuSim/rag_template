@@ -1,0 +1,5 @@
+langchain[llms]
+langchainhub
+chromadb
+beautifulsoup4
+gpt4all
