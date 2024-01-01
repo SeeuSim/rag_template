@@ -3,3 +3,8 @@ langchainhub
 chromadb
 beautifulsoup4
 gpt4all
+pdfplumber
+urllib3==1.26.6 
+typing-inspect==0.8.0
+typing_extensions==4.5.0
+pydantic==1.10.11

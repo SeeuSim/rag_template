@@ -6,11 +6,11 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.chains import RetrievalQA
 from langchain.document_loaders import WebBaseLoader
 from langchain.embeddings import GPT4AllEmbeddings
-from langchain.embeddings import OllamaEmbeddings  # We can also try Ollama embeddings
-from langchain.llms import Ollama
+# from langchain.embeddings import OllamaEmbeddings  # We can also try Ollama embeddings
+from langchain.llms.ollama import Ollama
 from langchain.schema import LLMResult
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
+from langchain.vectorstores.chroma import Chroma
 
 
 CONFIG = {
@@ -43,7 +43,7 @@ callback_manager = CallbackManager(
 )
 
 # Load web page
-loader = WebBaseLoader("https://lilianweng.github.io/posts/2023-06-23-agent/")
+loader = WebBaseLoader("https://brightonconnection.org.sg/bn_services/senior-outreach/")
 data = loader.load()
 
 # Split into chunks
@@ -88,8 +88,8 @@ qa_chain = RetrievalQA.from_chain_type(
 )
 
 questions = [
-    "What are the various approaches to Task Decomposition for AI Agents?",
-    "What is this document about?",
+    "What is this page about?",
+    "What are some of the programs available for elderly at this centre?"
 ]
 
 for question in questions:
