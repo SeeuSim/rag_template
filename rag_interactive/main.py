@@ -10,20 +10,43 @@ from langchain import hub
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain.chains import RetrievalQA
 from langchain.document_loaders import PDFPlumberLoader
 from langchain.embeddings import GPT4AllEmbeddings
-from langchain.llms.ollama import Ollama
-
 # from langchain.embeddings import OllamaEmbeddings  # We can also try Ollama embeddings
+from langchain.llms.ollama import Ollama
+from langchain.prompts import PromptTemplate
 from langchain.schema import LLMResult
 from langchain.schema.messages import BaseMessage
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.chains import RetrievalQA
 from langchain.vectorstores.chroma import Chroma
-
 
 MODEL_NAME = "mistral:7b-instruct"
 PROMPT_METHOD = "rlm/rag-prompt-mistral"
+
+INITIAL_PROMPT = r"""
+You are an experienced researcher, expert at interpreting and answering questions based on provided sources. Using the provided context, answer the user's question to the best of your ability using the resources provided.
+Generate a concise answer for a given question based solely on the provided search results (URL and content). You must only use information from the provided search results. Use an unbiased and journalistic tone. Combine search results together into a coherent answer. Do not repeat text.
+If there is nothing in the context relevant to the question at hand, just say "Hmm, I'm not sure." Don't try to make up an answer.
+Anything between the following \`context\` html blocks is retrieved from a knowledge bank, not part of the conversation with the user.
+<context>
+    {context}
+<context/>
+
+REMEMBER: If there is no relevant information within the context, just say "Hmm, I'm not sure." Don't try to make up an answer. Anything between the preceding 'context' html blocks is retrieved from a knowledge bank, not part of the conversation with the user.
+""".strip()
+
+HISTORY_PROMPT = r"""
+Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.
+
+Chat History:
+{chat_history}
+Follow Up Input: {question}
+Standalone Question:
+""".strip()
+
+initial_prompt = PromptTemplate.from_template(INITIAL_PROMPT)
+history_prompt = PromptTemplate.from_template(HISTORY_PROMPT)
 
 
 class InvalidFileArgumentException(Exception):
